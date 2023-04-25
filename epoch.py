@@ -37,13 +37,13 @@ def train(model, epochs=50, data_size=1000, lr=0.001):
         run_loss = 0.0
         
         # Iterate over batches of data
-        for inputs, labels in data_loader:
+        for conjecture, step, labels in data_loader:
 
             # Zero the gradients
             optimizer.zero_grad()
             
             # Forward pass
-            outputs = model(inputs)
+            outputs = model(conjecture, step)
             loss = loss_fn(outputs, labels)
             
             # Backward pass and optimization
@@ -51,7 +51,7 @@ def train(model, epochs=50, data_size=1000, lr=0.001):
             optimizer.step()
             
             # Update run loss
-            run_loss += loss.item() * inputs.size(0)
+            run_loss += loss.item() * step.size(0)
 
         # Run Test Loss
         test_loss = test(model)
@@ -93,15 +93,15 @@ def test(model, data_size=1000):
     run_loss = 0.0
 
     # Iterate over batches of data
-    for inputs, labels in data_loader:
+    for conjecture, step, labels in data_loader:
 
         with tr.no_grad():
 
-            outputs = model(inputs)
+            outputs = model(conjecture, step)
             loss = loss_fn(outputs, labels)
 
             # Update run loss
-            run_loss += loss.item() * inputs.size(0)
+            run_loss += loss.item() * step.size(0)
 
     test_loss = run_loss / len(data_size)
 
