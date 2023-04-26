@@ -12,14 +12,15 @@ import time
 
 # TODO: Decide if there is a benefit to using Wandb for logging
 
-def train(model, epochs=50, data_size=1000, lr=0.001):
+def train(model, epochs=50, data_size=1000, lr=0.001, loss_fn=None, optimizer=None):
 
-    # TODO: Determine if there is a better loss function and optimizer for our task
-    loss_fn = tr.nn.CrossEntropyLoss()
-    optimizer = tr.optim.SGD(model.parameters(), lr=lr)
+    # Set default loss and optimizer
+    if loss_fn == None: loss_fn = tr.nn.CrossEntropyLoss()
+    if optimizer == None: optimizer = tr.optim.SGD(model.parameters(), lr=lr)
+
 
     # TODO: Use parser + dataset builder to import dataset here
-    data_loader = None
+    data_loader = None  # get_dataset(split="Training")
 
     # Setup metrics
     train_loss_cumulative = []        # Track the loss to graph
@@ -54,7 +55,7 @@ def train(model, epochs=50, data_size=1000, lr=0.001):
             run_loss += loss.item() * step.size(0)
 
         # Run Test Loss
-        test_loss = test(model)
+        test_loss = test(model, loss_fn, split="Validation")
 
         # Update cumulative loss
         train_loss_cumulative.append(epoch_loss)
@@ -62,7 +63,7 @@ def train(model, epochs=50, data_size=1000, lr=0.001):
 
         # Print epoch statistics
         epoch_loss = run_loss / len(data_size)
-        print('Epoch [{}/{}], Training Loss: {:.4f}, Testing Loss: {:.4f}'.format(epoch+1, epochs, epoch_loss, test_loss))
+        print('Epoch [{}/{}], Training Loss: {:.4f}, Validation Loss: {:.4f}'.format(epoch+1, epochs, epoch_loss, test_loss))
 
 
     # Record Total Number of FLOPs
@@ -78,17 +79,15 @@ def train(model, epochs=50, data_size=1000, lr=0.001):
     plt.plot(train_loss_cumulative, 'b-')
     plt.plot(test_loss_cumulative, 'r-')
     plt.plot()
-    plt.legend(["Train", "Test"])
+    plt.legend(["Train", "Validation"])
     plt.show()
 
 
 
-def test(model, data_size=1000):
-
-    loss_fn = tr.nn.CrossEntropyLoss()
+def test(model, loss_fn, split="Testing", data_size=1000):
 
     # TODO: Use parser + dataset builder to import dataset here
-    data_loader = None
+    data_loader = None  # get_dataset(split=split)
 
     run_loss = 0.0
 
