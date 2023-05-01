@@ -9,43 +9,53 @@ import torch as tr
 import matplotlib.pyplot as plt
 from ptflops import get_model_complexity_info
 import time
+import dataset as ds
+import model as mdl
 
 # TODO: Decide if there is a benefit to using Wandb for logging
 
-def train(model, epochs=50, data_size=1000, lr=0.001, loss_fn=None, optimizer=None):
+def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=None):
 
     # Set default loss and optimizer
     if loss_fn == None: loss_fn = tr.nn.CrossEntropyLoss()
     if optimizer == None: optimizer = tr.optim.SGD(model.parameters(), lr=lr)
 
 
-    # TODO: Use parser + dataset builder to import dataset here
-    data_loader = None  # get_dataset(split="Training")
+    print("Generating dataset...")
+    train_set, val_set, test_set = ds.dataset_builder(100)
+    
 
     # Setup metrics
     train_loss_cumulative = []        # Track the loss to graph
     test_loss_cumulative = []
 
 
-    flops, params = get_model_complexity_info(model, data_loader, print_per_layer_stat=False)   # Track FLOPs
-    print('FLOPs: ', flops, ', Total Parameters: ', params)
+    # FIXME
+    # flops, params = get_model_complexity_info(model, train_set, print_per_layer_stat=False)   # Track FLOPs
+    # print('FLOPs: ', flops, ', Total Parameters: ', params)
 
     start_time = time.time()    # Track CPU time
 
+    print("Begining training loop...")
     # Run the training loop
     for epoch in range(epochs):
 
         run_loss = 0.0
         
         # Iterate over batches of data
-        for conjecture, step, labels in data_loader:
+        for conjecture, step, labels in train_set:
 
             # Zero the gradients
             optimizer.zero_grad()
             
             # Forward pass
-            outputs = model(conjecture, step)
-            loss = loss_fn(outputs, labels)
+            conjecture = conjecture.squeeze(dim=0)
+            step = step.squeeze(dim=0)
+            con_label = tr.stack([labels]*conjecture.size()[1]).permute(1, 0, 2)
+            step_label = tr.stack([labels]*step.size()[1]).permute(1, 0, 2)
+
+            outputs = model(conjecture, step, con_label, step_label)
+            loss = loss_fn(outputs, labels[:, :2].to(tr.long))
             
             # Backward pass and optimization
             loss.backward()
@@ -55,20 +65,25 @@ def train(model, epochs=50, data_size=1000, lr=0.001, loss_fn=None, optimizer=No
             run_loss += loss.item() * step.size(0)
 
         # Run Test Loss
-        test_loss = test(model, loss_fn, split="Validation")
+        test_loss = test(model, loss_fn, val_set)
+        epoch_loss = run_loss / len(train_set)
 
         # Update cumulative loss
         train_loss_cumulative.append(epoch_loss)
         test_loss_cumulative.append(test_loss)
 
         # Print epoch statistics
-        epoch_loss = run_loss / len(data_size)
         print('Epoch [{}/{}], Training Loss: {:.4f}, Validation Loss: {:.4f}'.format(epoch+1, epochs, epoch_loss, test_loss))
 
 
+    # Test Accuracy
+    test_loss = test(model, loss_fn, test_set)
+    print('Testing Loss: {:.4f}'.format(test_loss))
+
+    # FIXME
     # Record Total Number of FLOPs
-    total_flops, total_params = get_model_complexity_info(model, data_loader, print_per_layer_stat=False)
-    print('Total FLOPs: ', total_flops, ', Total Parameters: ', total_params)
+    # total_flops, total_params = get_model_complexity_info(model, train_set, print_per_layer_stat=False)
+    # print('Total FLOPs: ', total_flops, ', Total Parameters: ', total_params)
 
     # Record Total CPU Time
     end_time = time.time()
@@ -84,24 +99,30 @@ def train(model, epochs=50, data_size=1000, lr=0.001, loss_fn=None, optimizer=No
 
 
 
-def test(model, loss_fn, split="Testing", data_size=1000):
-
-    # TODO: Use parser + dataset builder to import dataset here
-    data_loader = None  # get_dataset(split=split)
+def test(model, loss_fn, dset):
 
     run_loss = 0.0
 
     # Iterate over batches of data
-    for conjecture, step, labels in data_loader:
+    for conjecture, step, labels in dset:
 
         with tr.no_grad():
+            conjecture = conjecture.squeeze(dim=0)
+            step = step.squeeze(dim=0)
+            con_label = tr.stack([labels]*conjecture.size()[1]).permute(1, 0, 2)
+            step_label = tr.stack([labels]*step.size()[1]).permute(1, 0, 2)
 
-            outputs = model(conjecture, step)
-            loss = loss_fn(outputs, labels)
+            outputs = model(conjecture, step, con_label, step_label)
+            loss = loss_fn(outputs, labels[:, :2].to(tr.long))
 
             # Update run loss
             run_loss += loss.item() * step.size(0)
 
-    test_loss = run_loss / len(data_size)
+    test_loss = run_loss / len(dset)
 
     return test_loss
+
+
+if __name__ == '__main__':
+    model = mdl.SiameseTransformer(256)
+    train(model)

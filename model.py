@@ -14,11 +14,11 @@ Siamese Models
 class Transformer(nn.Module):
     def __init__(self, nhead, num_encoder_layers):
         super(Transformer, self).__init__()
-        self.module = nn.Transformer(nhead=nhead, num_encoder_layers=num_encoder_layers)
+        self.module = nn.Transformer(d_model=256, nhead=nhead, num_encoder_layers=num_encoder_layers)
 
-    def forward(self, x):
+    def forward(self, x, y):
         # Simple forward pass implementaiton
-        output = self.module(x)
+        output = self.module(x, y)
         return output
 
 
@@ -36,11 +36,11 @@ class SiameseTransformer(nn.Module):
         self.fc = nn.Linear(in_dim, 2)
 
 
-    def forward(self, conjecture, step):
+    def forward(self, conjecture, step, con_label, step_label):
         # Forward pass through transformer modules
-        conj_out = self.conj_transformer(conjecture)
-        step_out = self.step_transformer(step)
-        x = torch.concat((conj_out, step_out))
+        conj_out = self.conj_transformer(conjecture, con_label)
+        step_out = self.step_transformer(step, step_label)
+        x = torch.cat([conj_out, step_out], dim=1)
 
         # Feed into fully connected layer
         x = self.fc(x)
