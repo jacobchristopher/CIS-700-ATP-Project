@@ -56,7 +56,9 @@ def encode(premise, max_len, embedder):
     prompt = premise[-context_length:]
 
     # embed the prompt tokens with position information
-    encoded = embedder(prompt)
+    encoded = embedder(prompt).permute(1, 0, 2)
+    encoded = tr.nn.functional.pad(encoded, (0, 0, 0, max_len-encoded.size()[1], 0, 0), mode='constant', value=0)
+    # print(encoded.shape)
 
     return encoded
 
@@ -172,8 +174,9 @@ def dataset_builder(size):
             if labels[idx] == '-': label = tr.tensor([0.]*max_len)
             else: label = tr.tensor([1.]*max_len)
             
-            x = encode(con, max_len, embedder).permute(1, 0, 2)
-            seq = (x, encode(examples[idx], max_len, embedder).permute(1, 0, 2), label)
+            x = encode(con, max_len, embedder)
+            y = encode(examples[idx], max_len, embedder)
+            seq = (x, y, label)
             dset.append(seq)
 
     dset = dset[0:size]
@@ -188,4 +191,4 @@ def dataset_builder(size):
     val_sampler = dset[num_train:num_test]
     test_sampler = dset[num_test:]
 
-    return data.DataLoader(train_sampler, shuffle=True), data.DataLoader(val_sampler, shuffle=True), data.DataLoader(test_sampler, shuffle=True)
+    return data.DataLoader(train_sampler, batch_size=16, shuffle=True), data.DataLoader(val_sampler, batch_size=16, shuffle=True), data.DataLoader(test_sampler, batch_size=16, shuffle=True)

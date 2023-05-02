@@ -12,6 +12,8 @@ import time
 import dataset as ds
 import model as mdl
 
+device = tr.device("cuda")
+
 # TODO: Decide if there is a benefit to using Wandb for logging
 
 def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=None):
@@ -22,8 +24,7 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
 
 
     print("Generating dataset...")
-    train_set, val_set, test_set = ds.dataset_builder(100)
-    
+    train_set, val_set, test_set = ds.dataset_builder(data_size)
 
     # Setup metrics
     train_loss_cumulative = []        # Track the loss to graph
@@ -47,15 +48,18 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
 
             # Zero the gradients
             optimizer.zero_grad()
-            
-            # Forward pass
-            conjecture = conjecture.squeeze(dim=0)
-            step = step.squeeze(dim=0)
-            con_label = tr.stack([labels]*conjecture.size()[1]).permute(1, 0, 2)
-            step_label = tr.stack([labels]*step.size()[1]).permute(1, 0, 2)
 
+            # Forward pass
+            conjecture = conjecture.squeeze(dim=1).to(device)
+            step = step.squeeze(dim=1).to(device)
+
+            # print(conjecture.shape, step.shape)
+            con_label = tr.stack([labels]*conjecture.size()[1]).permute(1, 0, 2).to(device)
+            step_label = tr.stack([labels]*step.size()[1]).permute(1, 0, 2).to(device)
+
+            # print(conjecture.shape, con_label.shape)
             outputs = model(conjecture, step, con_label, step_label)
-            loss = loss_fn(outputs, labels[:, :2].to(tr.long))
+            loss = loss_fn(outputs.to(device), labels[:, :2].to(tr.long).to(device))
             
             # Backward pass and optimization
             loss.backward()
@@ -107,13 +111,13 @@ def test(model, loss_fn, dset):
     for conjecture, step, labels in dset:
 
         with tr.no_grad():
-            conjecture = conjecture.squeeze(dim=0)
-            step = step.squeeze(dim=0)
-            con_label = tr.stack([labels]*conjecture.size()[1]).permute(1, 0, 2)
-            step_label = tr.stack([labels]*step.size()[1]).permute(1, 0, 2)
+            conjecture = conjecture.squeeze(dim=1).to(device)
+            step = step.squeeze(dim=1).to(device)
+            con_label = tr.stack([labels]*conjecture.size()[1]).permute(1, 0, 2).to(device)
+            step_label = tr.stack([labels]*step.size()[1]).permute(1, 0, 2).to(device)
 
             outputs = model(conjecture, step, con_label, step_label)
-            loss = loss_fn(outputs, labels[:, :2].to(tr.long))
+            loss = loss_fn(outputs.to(device), labels[:, :2].to(tr.long).to(device))
 
             # Update run loss
             run_loss += loss.item() * step.size(0)
@@ -124,5 +128,9 @@ def test(model, loss_fn, dset):
 
 
 if __name__ == '__main__':
+    print("GPU ready = ", tr.cuda.is_available())
+
     model = mdl.SiameseTransformer(256)
-    train(model)
+    # model = mdl.SiameseCNNLSTM(256, 256)
+    model.to(device)
+    train(model, data_size=100)
