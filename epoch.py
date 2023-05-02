@@ -13,6 +13,7 @@ import dataset as ds
 import model as mdl
 import sklearn.metrics as metrics
 import torchmetrics
+from thop import profile
 
 device = tr.device("cuda")
 
@@ -36,11 +37,6 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
     train_acc_cumulative = []
     val_acc_cumulative = []
 
-
-    # FIXME
-    # flops, params = get_model_complexity_info(model, train_set, print_per_layer_stat=False)   # Track FLOPs
-    # print('FLOPs: ', flops, ', Total Parameters: ', params)
-
     start_time = time.time()    # Track CPU time
 
     print("Begining training loop...")
@@ -50,23 +46,26 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
         run_loss = 0.0
         iter_acc = []
         
+        idx = 0
         # Iterate over batches of data
         for conjecture, step, labels in train_set:
 
             # Zero the gradients
             optimizer.zero_grad()
-
-            # Forward pass
+        
             conjecture = conjecture.squeeze(dim=1).to(device)
             step = step.squeeze(dim=1).to(device)
-
-            # print(conjecture.shape, step.shape)
             con_label = tr.stack([labels]*conjecture.size()[1]).permute(1, 0, 2).to(device)
             step_label = tr.stack([labels]*step.size()[1]).permute(1, 0, 2).to(device)
 
-            # print(conjecture.shape, con_label.shape)
-            outputs = model(conjecture, step, con_label, step_label)
+            if epoch == 0 and idx == 0:
+                flops, params = profile(model, inputs=(conjecture, step, con_label, step_label), verbose=False)
+                print("==============================================================")
+                print(f"  FLOPs Per Batch: {int(flops)}, Model Parameters: {int(params)}")
+                print("==============================================================")
 
+            # Forward pass
+            outputs = model(conjecture, step, con_label, step_label)
             labels = labels[:, -2:].to(device)
             labels[:, 1] = 1 - labels[:, 1]
             loss = loss_fn(outputs.to(device), labels)
@@ -78,11 +77,12 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
             # Update run loss
             run_loss += loss.item() * step.size(0)
 
+            # Update Accuracy
             label_simpl = tr.where(labels[:, 0] > labels[:, 1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
             output_result = tr.where(outputs[:, 0] > outputs[:, 1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
-
             train_acc = accuracy(label_simpl, output_result)
             iter_acc.append(train_acc)
+            idx += 1
 
         # Run Test Loss
         val_loss, val_acc = test(model, loss_fn, val_set)
@@ -103,11 +103,6 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
     # Test Accuracy
     test_loss, test_acc = test(model, loss_fn, test_set)
     print('Testing Loss: {:.4f}, Testing Acc: {:.4f}'.format(test_loss, test_acc))
-
-    # FIXME
-    # Record Total Number of FLOPs
-    # total_flops, total_params = get_model_complexity_info(model, train_set, print_per_layer_stat=False)
-    # print('Total FLOPs: ', total_flops, ', Total Parameters: ', total_params)
 
     # Record Total CPU Time
     end_time = time.time()
@@ -170,4 +165,4 @@ if __name__ == '__main__':
     model = mdl.SiameseCNNLSTM(256, 256)
 
     model.to(device)
-    train(model, data_size=500, epochs=500, lr=0.1)
+    train(model, data_size=500, epochs=50, lr=0.1)
