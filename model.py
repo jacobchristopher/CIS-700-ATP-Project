@@ -56,38 +56,40 @@ class SiameseCNNLSTM(nn.Module):
         super(SiameseCNNLSTM, self).__init__()
 
         # Convolutional layers
-        self.conv1a = torch.conv1d(in_channels=in_dim, out_channels=in_dim, kernel_size=7)
-        self.conv1b = torch.conv1d(in_channels=in_dim, out_channels=in_dim, kernel_size=7)
-        self.conv1c = torch.conv1d(in_channels=in_dim, out_channels=in_dim, kernel_size=7)
-        self.conv1d = torch.conv1d(in_channels=in_dim, out_channels=in_dim, kernel_size=7)
+        self.conv1a = nn.Conv1d(in_channels=in_dim, out_channels=in_dim, kernel_size=7)
+        self.conv1b = nn.Conv1d(in_channels=in_dim, out_channels=in_dim, kernel_size=7)
+        self.conv1c = nn.Conv1d(in_channels=in_dim, out_channels=in_dim, kernel_size=7)
+        self.conv1d = nn.Conv1d(in_channels=in_dim, out_channels=in_dim, kernel_size=7)
 
         # Activation function
-        self.maxpool = torch.max_pool1d(kernel_size=3, stride=3)
+        self.maxpool1 = nn.MaxPool1d(kernel_size=3, stride=3)
+        self.maxpool2 = nn.MaxPool1d(kernel_size=512)
 
         #LSTM
         self.lstm = nn.LSTM(in_dim, hidden_dim, in_dim)
 
         # Fully connected layers
         self.activation = nn.Sigmoid()
-        self.fc = nn.Linear(in_dim, 2)
+        self.fc = nn.Linear(25, 2)
 
 
-    def forward(self, conjecture, step):
+    def forward(self, conjecture, step, con_label, step_label):
         # Conjecture forward pass
         conjecture = self.conv1a(conjecture)
-        conjecture = self.maxpool(conjecture)
+        conjecture = self.maxpool1(conjecture)
         conjecture = self.conv1b(conjecture)
-        conjecture = self.maxpool(conjecture)
+        conjecture = self.maxpool1(conjecture)
 
         # Step forward pass
         step = self.conv1c(step)
-        step = self.maxpool(step)
+        step = self.maxpool1(step)
         step = self.conv1d(step)
-        step = self.maxpool(step)
+        step = self.maxpool1(step)
 
-        x = torch.concat((conjecture, step))
+        x = torch.cat([conjecture, step], dim=1)
 
         # Feed into fully connected layer
         x = self.fc(x)
         x = self.activation(x)
+        x = self.maxpool2(x.transpose(1, 2)).squeeze()
         return x

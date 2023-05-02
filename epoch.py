@@ -120,7 +120,7 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
     ax.plot(val_acc_cumulative, label='Validation')
     ax.set_xlabel('Epochs')
     ax.set_ylabel('Accuracy')
-    ax.set_title('Siamese Transformer')
+    ax.set_title('Baseline')
     ax.legend()
 
     plt.show()
@@ -166,7 +166,8 @@ def test(model, loss_fn, dset):
 if __name__ == '__main__':
     print("GPU ready = ", tr.cuda.is_available())
 
-    model = mdl.SiameseTransformer(256)
-    # model = mdl.SiameseCNNLSTM(256, 256)
+    # model = mdl.SiameseTransformer(256)
+    model = mdl.SiameseCNNLSTM(256, 256)
+
     model.to(device)
-    train(model, data_size=200, epochs=75)
+    train(model, data_size=500, epochs=500, lr=0.1)

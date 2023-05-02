@@ -1,6 +1,7 @@
 import torch as tr
 import torch.utils.data as data
 from torch.utils.data.sampler import SubsetRandomSampler
+import random
 
 """
 
@@ -180,6 +181,7 @@ def dataset_builder(size):
             dset.append(seq)
 
     dset = dset[0:size]
+    random.shuffle(dset)
 
     # Calculate number of samples
     num_data = len(dset)
