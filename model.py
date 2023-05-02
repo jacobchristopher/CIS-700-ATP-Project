@@ -34,6 +34,7 @@ class SiameseTransformer(nn.Module):
         # Fully connected layers
         self.activation = nn.Sigmoid()
         self.fc = nn.Linear(in_dim, 2)
+        self.maxpool = nn.MaxPool1d(kernel_size=512)
 
 
     def forward(self, conjecture, step, con_label, step_label):
@@ -45,6 +46,7 @@ class SiameseTransformer(nn.Module):
         # Feed into fully connected layer
         x = self.fc(x)
         x = self.activation(x)
+        x = self.maxpool(x.transpose(1, 2)).squeeze()
         return x
     
 
