@@ -163,30 +163,42 @@ if __name__ == '__main__':
         # model = mdl.SiameseCNNLSTM(256, 256)
 
         model.to(device)
-        acc, loss = train(model, data_size=10000, epochs=50, lr=0.1)
+        acc, loss = train(model, data_size=50, epochs=5, lr=0.1)
 
         net_acc.append(acc)
         net_loss.append(loss)
+    
+
+    # acc_averages = util.list_average(net_acc)
+    # oss_averages = util.list_average(net_loss)
 
 
-    for acc_averages in net_acc:
-        # Graph the accuracy curves
-        fig, ax = plt.subplots()
-        ax.plot(acc_averages[0], label='Train')
-        ax.plot(acc_averages[1], label='Validation')
-        ax.set_xlabel('Epochs')
-        ax.set_ylabel('Accuracy')
-        ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
-        ax.legend()
-        plt.show()
+    # Graph the accuracy curves
+    fig, ax = plt.subplots()
+    ax.plot(net_acc[0][0], color='blue', label='Train 1')
+    ax.plot(net_acc[1][0], linestyle='--', color='blue', label='Train 2')
+    ax.plot(net_acc[2][0], linestyle=':', color='blue', label='Train 3')
+    ax.plot(net_acc[0][1], color='red', label='Validation 1')
+    ax.plot(net_acc[1][1], linestyle='--', color='red', label='Validation 2')
+    ax.plot(net_acc[2][1], linestyle=':', color='red', label='Validation 3')
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Accuracy')
+    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+    ax.legend()
 
-    for loss_averages in net_loss:
-        # Graph the loss curves
-        fig, ax = plt.subplots()
-        ax.plot(loss_averages[0], label='Train')
-        ax.plot(loss_averages[1], label='Validation')
-        ax.set_xlabel('Epochs')
-        ax.set_ylabel('Loss')
-        ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
-        ax.legend()
-        plt.show()
+    plt.show()
+
+    # Graph the loss curves
+    fig, ax = plt.subplots()
+    ax.plot(net_loss[0][0], color='blue', label='Train 1')
+    ax.plot(net_loss[1][0], linestyle='--', color='blue', label='Train 2')
+    ax.plot(net_loss[2][0], linestyle=':', color='blue', label='Train 3')
+    ax.plot(net_loss[0][1], color='red', label='Validation 1')
+    ax.plot(net_loss[1][1], linestyle='--', color='red', label='Validation 2')
+    ax.plot(net_loss[2][1], linestyle=':', color='red', label='Validation 3')
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Loss')
+    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+    ax.legend()
+
+    plt.show()
