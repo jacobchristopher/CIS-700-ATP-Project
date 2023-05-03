@@ -163,34 +163,30 @@ if __name__ == '__main__':
         # model = mdl.SiameseCNNLSTM(256, 256)
 
         model.to(device)
-        acc, loss = train(model, data_size=500, epochs=5, lr=0.1)
+        acc, loss = train(model, data_size=10000, epochs=50, lr=0.1)
 
         net_acc.append(acc)
         net_loss.append(loss)
-    
-
-    acc_averages = util.list_average(net_acc)
-    loss_averages = util.list_average(net_loss)
 
 
-    # Graph the accuracy curves
-    fig, ax = plt.subplots()
-    ax.plot(acc_averages[0], label='Train')
-    ax.plot(acc_averages[1], label='Validation')
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel('Accuracy')
-    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
-    ax.legend()
+    for acc_averages in net_acc:
+        # Graph the accuracy curves
+        fig, ax = plt.subplots()
+        ax.plot(acc_averages[0], label='Train')
+        ax.plot(acc_averages[1], label='Validation')
+        ax.set_xlabel('Epochs')
+        ax.set_ylabel('Accuracy')
+        ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+        ax.legend()
+        plt.show()
 
-    plt.show()
-
-    # Graph the loss curves
-    fig, ax = plt.subplots()
-    ax.plot(loss_averages[0], label='Train')
-    ax.plot(loss_averages[1], label='Validation')
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel('Loss')
-    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
-    ax.legend()
-
-    plt.show()
+    for loss_averages in net_loss:
+        # Graph the loss curves
+        fig, ax = plt.subplots()
+        ax.plot(loss_averages[0], label='Train')
+        ax.plot(loss_averages[1], label='Validation')
+        ax.set_xlabel('Epochs')
+        ax.set_ylabel('Loss')
+        ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+        ax.legend()
+        plt.show()
