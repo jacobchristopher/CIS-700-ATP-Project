@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+import utils
+from dataset import encode
 
 """
 
@@ -14,13 +16,20 @@ Siamese Models
 class Transformer(nn.Module):
     def __init__(self, nhead, num_encoder_layers):
         super(Transformer, self).__init__()
-        self.module = nn.Transformer(d_model=256, nhead=nhead, num_encoder_layers=num_encoder_layers)
 
-    def forward(self, x, y):
-        # Simple forward pass implementaiton
-        output = self.module(x, y)
+        self.positional_encoder = utils.trigonometric_positional_encoder(256, 256, 10000, "cuda")
+        
+        layer = nn.TransformerEncoderLayer(d_model=256, nhead=nhead, dim_feedforward=256, batch_first=True)
+        self.trf = nn.TransformerEncoder(layer, num_encoder_layers)
+        self.attn_mask = torch.triu(torch.full((256, 256), float('-inf'), device="cuda"), diagonal=1)
+        self.readout = nn.Linear(256, 2)
+
+    def forward(self, x):
+        x = self.positional_encoder(x)
+        x = x.squeeze(1)
+        mask = self.attn_mask[:x.shape[1], :x.shape[1]]
+        output = self.trf(x, mask = mask)
         return output
-
 
 
 class SiameseTransformer(nn.Module):
@@ -37,10 +46,11 @@ class SiameseTransformer(nn.Module):
         self.maxpool = nn.MaxPool1d(kernel_size=512)
 
 
-    def forward(self, conjecture, step, con_label, step_label):
+    def forward(self, conjecture, step):
+
         # Forward pass through transformer modules
-        conj_out = self.conj_transformer(conjecture, con_label)
-        step_out = self.step_transformer(step, step_label)
+        conj_out = self.conj_transformer(conjecture)
+        step_out = self.step_transformer(step)
         x = torch.cat([conj_out, step_out], dim=1)
 
         # Feed into fully connected layer
@@ -73,7 +83,7 @@ class SiameseCNNLSTM(nn.Module):
         self.fc = nn.Linear(25, 2)
 
 
-    def forward(self, conjecture, step, con_label, step_label):
+    def forward(self, conjecture, step):
         # Conjecture forward pass
         conjecture = self.conv1a(conjecture)
         conjecture = self.maxpool1(conjecture)

@@ -2,23 +2,19 @@
 Installation Packages:
   - PyTorch
   - MatPlotLib
-  - PTFLOPs: https://pypi.org/project/ptflops/
+  - thop: https://pypi.org/project/thop/
 """
 
 import torch as tr
 import matplotlib.pyplot as plt
-from ptflops import get_model_complexity_info
 import time
 import dataset as ds
 import model as mdl
-import sklearn.metrics as metrics
 import torchmetrics
 from thop import profile
-import util
+from dataset import encode
 
 device = tr.device("cuda")
-
-# TODO: Decide if there is a benefit to using Wandb for logging
 
 def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=None):
 
@@ -30,13 +26,14 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
 
 
     print("Generating dataset...")
-    train_set, val_set, test_set = ds.dataset_builder(data_size)
+    train_set, val_set, test_set, embedder = ds.dataset_builder(data_size)
 
     # Setup metrics
     train_loss_cumulative = []        # Track the loss to graph
     val_loss_cumulative = []
     train_acc_cumulative = []
     val_acc_cumulative = []
+    grad_norm = []
 
     start_time = time.time()    # Track CPU time
 
@@ -50,43 +47,43 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
         idx = 0
         # Iterate over batches of data
         for conjecture, step, labels in train_set:
+            
+            conjecture = encode(conjecture, 256, embedder)
+            step = encode(step, 256, embedder)
 
             # Zero the gradients
             optimizer.zero_grad()
         
-            conjecture = conjecture.squeeze(dim=1).to(device)
-            step = step.squeeze(dim=1).to(device)
-            con_label = tr.stack([labels]*conjecture.size()[1]).permute(1, 0, 2).to(device)
-            step_label = tr.stack([labels]*step.size()[1]).permute(1, 0, 2).to(device)
-
             if epoch == 0 and idx == 0:
-                flops, params = profile(model, inputs=(conjecture, step, con_label, step_label), verbose=False)
+                flops, params = profile(model, inputs=(conjecture, step), verbose=False)
                 print("==============================================================")
                 print(f"  FLOPs Per Batch: {int(flops)}, Model Parameters: {int(params)}")
                 print("==============================================================")
 
             # Forward pass
-            outputs = model(conjecture, step, con_label, step_label)
-            labels = labels[:, -2:].to(device)
-            labels[:, 1] = 1 - labels[:, 1]
-            loss = loss_fn(outputs.to(device), labels)
+            labels = labels.to(device)
+            outputs = model(conjecture, step).to(device)
+            loss = loss_fn(outputs, labels)
             
             # Backward pass and optimization
             loss.backward()
             optimizer.step()
+
+            grads = tr.cat([p.grad.view(-1) for p in model.parameters() if p.grad is not None])
+            grad_norm.append(grads.norm(p=1).cpu())
             
             # Update run loss
             run_loss += loss.item() * step.size(0)
 
             # Update Accuracy
-            label_simpl = tr.where(labels[:, 0] > labels[:, 1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
-            output_result = tr.where(outputs[:, 0] > outputs[:, 1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
+            label_simpl = tr.where(labels[0] > labels[1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
+            output_result = tr.where(outputs[0] > outputs[1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
             train_acc = accuracy(label_simpl, output_result)
             iter_acc.append(train_acc)
             idx += 1
 
         # Run Test Loss
-        val_loss, val_acc = test(model, loss_fn, val_set)
+        val_loss, val_acc = test(model, loss_fn, val_set, embedder)
         epoch_loss = run_loss / len(train_set)
         train_acc = sum(iter_acc) / len(iter_acc)        
 
@@ -102,7 +99,7 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
 
 
     # Test Accuracy
-    test_loss, test_acc = test(model, loss_fn, test_set)
+    test_loss, test_acc = test(model, loss_fn, test_set, embedder)
     print('Testing Loss: {:.4f}, Testing Acc: {:.4f}'.format(test_loss, test_acc))
 
     # Record Total CPU Time
@@ -111,11 +108,11 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
     print('CPU Time: ', elapsed_time)
 
 
-    return (train_acc_cumulative, val_acc_cumulative), (train_loss_cumulative, val_loss_cumulative)
+    return (train_acc_cumulative, val_acc_cumulative), (train_loss_cumulative, val_loss_cumulative), grad_norm
 
 
 
-def test(model, loss_fn, dset):
+def test(model, loss_fn, dset, embedder):
 
     run_loss = 0.0
 
@@ -126,21 +123,18 @@ def test(model, loss_fn, dset):
     for conjecture, step, labels in dset:
 
         with tr.no_grad():
-            conjecture = conjecture.squeeze(dim=1).to(device)
-            step = step.squeeze(dim=1).to(device)
-            con_label = tr.stack([labels]*conjecture.size()[1]).permute(1, 0, 2).to(device)
-            step_label = tr.stack([labels]*step.size()[1]).permute(1, 0, 2).to(device)
+            conjecture = encode(conjecture, 256, embedder)
+            step = encode(step, 256, embedder)
 
-            outputs = model(conjecture, step, con_label, step_label)
+            outputs = model(conjecture, step)
 
-            labels = labels[:, -2:].to(device)
-            labels[:, 1] = 1 - labels[:, 1]
+            labels = labels.to(device)
             loss = loss_fn(outputs.to(device), labels)
 
             # Update run loss
             run_loss += loss.item() * step.size(0)
-            label_simpl = tr.where(labels[:, 0] > labels[:, 1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
-            output_result = tr.where(outputs[:, 0] > outputs[:, 1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
+            label_simpl = tr.where(labels[0] > labels[1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
+            output_result = tr.where(outputs[0] > outputs[1], tr.tensor([1]).to(device), tr.tensor([0]).to(device))
 
             test_acc = accuracy(label_simpl, output_result)
             iter_acc.append(test_acc)
@@ -156,21 +150,19 @@ if __name__ == '__main__':
 
     net_acc = []
     net_loss = []
+    net_grad = []
     
     for i in range(3):
 
-        model = mdl.SiameseTransformer(256)
+        model = mdl.SiameseTransformer(256, nhead=8)
         # model = mdl.SiameseCNNLSTM(256, 256)
 
         model.to(device)
-        acc, loss = train(model, data_size=50, epochs=5, lr=0.1)
+        acc, loss, grad = train(model, data_size=100, epochs=2, lr=0.01)
 
         net_acc.append(acc)
         net_loss.append(loss)
-    
-
-    # acc_averages = util.list_average(net_acc)
-    # oss_averages = util.list_average(net_loss)
+        net_grad.append(grad)
 
 
     # Graph the accuracy curves
@@ -198,6 +190,18 @@ if __name__ == '__main__':
     ax.plot(net_loss[2][1], linestyle=':', color='red', label='Validation 3')
     ax.set_xlabel('Epochs')
     ax.set_ylabel('Loss')
+    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+    ax.legend()
+
+    plt.show()
+
+    # Graph grad l1 norm
+    fig, ax = plt.subplots()
+    ax.plot(net_grad[0], label='Iteration 1')
+    ax.plot(net_grad[1], label='Iteration 2')
+    ax.plot(net_grad[2], label='Iteration 3')
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Gradient L1 Norm')
     ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
     ax.legend()
 

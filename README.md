@@ -1,5 +1,11 @@
 # Setup Guide
 
+## Package Installation
+
+1. Install a stable version of `PyTorch` (tested with version 1.13.1+cu116): https://pytorch.org/get-started/locally/
+2. Install the latest version of `MatPlotLib`: https://pypi.org/project/matplotlib/
+3. Install `thop` to track FLOPs and model parameter counts: https://pypi.org/project/thop/
+
 ## Download and setup dataset
 
 1. The HolStep dataset may be download [here](http://cl-informatik.uibk.ac.at/cek/holstep/).

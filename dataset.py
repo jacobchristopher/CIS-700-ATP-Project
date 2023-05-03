@@ -1,6 +1,5 @@
 import torch as tr
 import torch.utils.data as data
-from torch.utils.data.sampler import SubsetRandomSampler
 import random
 
 """
@@ -59,7 +58,6 @@ def encode(premise, max_len, embedder):
     # embed the prompt tokens with position information
     encoded = embedder(prompt).permute(1, 0, 2)
     encoded = tr.nn.functional.pad(encoded, (0, 0, 0, max_len-encoded.size()[1], 0, 0), mode='constant', value=0)
-    # print(encoded.shape)
 
     return encoded
 
@@ -148,18 +146,11 @@ def dataset_builder(size):
         for token in con: vocab[token] = vocab.get(token, 0) + 1
         plen = len(con)
 
-        # # the holstep paper appears to only condition on conjecture, not dependencies
-        # for d in dep:
-        #     for token in d: vocab[token] = vocab.get(token, 0) + 1
-        #     plen += len(d)
-
         for example, label in zip(examples, labels):
             for token in example: vocab[token] = vocab.get(token, 0) + 1
 
             plen_e = plen + len(example)
             prompt_lengths[plen_e] = prompt_lengths.get(plen_e, 0) + 1
-
-        # if s % 100 == 0: print(f"{s} of 9999, |V| >= {len(vocab)}, L >= {max(prompt_lengths.keys())}")
 
         if s == size: break
 
@@ -172,12 +163,10 @@ def dataset_builder(size):
         
         for idx in range(len(examples)):
 
-            if labels[idx] == '-': label = tr.tensor([0.]*max_len)
-            else: label = tr.tensor([1.]*max_len)
-            
-            x = encode(con, max_len, embedder)
-            y = encode(examples[idx], max_len, embedder)
-            seq = (x, y, label)
+            if labels[idx] == '-': label = tr.tensor([0., 1.])
+            else: label = tr.tensor([1., 0.])
+
+            seq = (con, examples[idx], label)
             dset.append(seq)
 
     dset = dset[0:size]
@@ -193,4 +182,4 @@ def dataset_builder(size):
     val_sampler = dset[num_train:num_test]
     test_sampler = dset[num_test:]
 
-    return data.DataLoader(train_sampler, batch_size=16, shuffle=True), data.DataLoader(val_sampler, batch_size=16, shuffle=True), data.DataLoader(test_sampler, batch_size=16, shuffle=True)
+    return train_sampler, val_sampler, test_sampler, embedder
