@@ -14,6 +14,7 @@ import model as mdl
 import sklearn.metrics as metrics
 import torchmetrics
 from thop import profile
+import util
 
 device = tr.device("cuda")
 
@@ -109,16 +110,8 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
     elapsed_time = end_time - start_time
     print('CPU Time: ', elapsed_time)
 
-    # Graph the loss curves
-    fig, ax = plt.subplots()
-    ax.plot(train_acc_cumulative, label='Train')
-    ax.plot(val_acc_cumulative, label='Validation')
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel('Accuracy')
-    ax.set_title('Baseline')
-    ax.legend()
 
-    plt.show()
+    return (train_acc_cumulative, val_acc_cumulative), (train_loss_cumulative, val_loss_cumulative)
 
 
 
@@ -161,8 +154,43 @@ def test(model, loss_fn, dset):
 if __name__ == '__main__':
     print("GPU ready = ", tr.cuda.is_available())
 
-    # model = mdl.SiameseTransformer(256)
-    model = mdl.SiameseCNNLSTM(256, 256)
+    net_acc = []
+    net_loss = []
+    
+    for i in range(3):
 
-    model.to(device)
-    train(model, data_size=500, epochs=50, lr=0.1)
+        model = mdl.SiameseTransformer(256)
+        # model = mdl.SiameseCNNLSTM(256, 256)
+
+        model.to(device)
+        acc, loss = train(model, data_size=500, epochs=5, lr=0.1)
+
+        net_acc.append(acc)
+        net_loss.append(loss)
+    
+
+    acc_averages = util.list_average(net_acc)
+    loss_averages = util.list_average(net_loss)
+
+
+    # Graph the accuracy curves
+    fig, ax = plt.subplots()
+    ax.plot(acc_averages[0], label='Train')
+    ax.plot(acc_averages[1], label='Validation')
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Accuracy')
+    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+    ax.legend()
+
+    plt.show()
+
+    # Graph the loss curves
+    fig, ax = plt.subplots()
+    ax.plot(loss_averages[0], label='Train')
+    ax.plot(loss_averages[1], label='Validation')
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Loss')
+    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+    ax.legend()
+
+    plt.show()
