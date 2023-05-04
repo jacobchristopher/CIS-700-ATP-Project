@@ -33,3 +33,18 @@ python epoch.py
 2. We mainly train the SiameseCNNLSTM model and the SiameseTransformer models. To pick the specific model for faster completion, you can comment out the other models in the `epoch.py` file, under the `if __name__ == '__main__':` section.
 
 3. You can choose to switch between cpu and gpu by changing the `device` variable in the top of the `epoch.py` file.
+
+
+## Refernces
+
+Katz, Garrett. "TransformerHolstep.ipynb" Deep Automated Theorem Proving. CIS 700, Spring 2023.
+
+Katz, Garrett. "TransformerMetamathV2.ipynb" Deep Automated Theorem Proving. CIS 700, Spring 2023.
+
+Hunter, J. D. "Matplotlib: A 2D Graphics Environment." Computing in Science & Engineering, vol. 9, no. 3, 2007, pp. 90-95.
+
+Harris, C.R., Millman, K.J., et al. Array programming with NumPy. Nature 585, 2020, pp. 357–362. https://doi.org/10.1038/s41586-020-2649-2
+
+Paszke, A., Gross, S., et al. PyTorch: An Imperative Style, High-Performance Deep Learning Library. Advances in Neural Information Processing Systems 32, Curran Associates, Inc., pp. 8024–8035. http://papers.neurips.cc/paper/9015-pytorch-an-imperative-style-high-performance-deep-learning-library.pdf
+
+Zhu, Ligeng. "pytorch-OpCounter". GitHub, https://github.com/Lyken17/pytorch-OpCounter/ 

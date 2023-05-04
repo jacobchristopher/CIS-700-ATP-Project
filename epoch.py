@@ -48,8 +48,10 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
         # Iterate over batches of data
         for conjecture, step, labels in train_set:
             
-            conjecture = encode(conjecture, 256, embedder)
-            step = encode(step, 256, embedder)
+            # conjecture = encode(conjecture, 256, embedder)
+            # step = encode(step, 256, embedder)
+            conjecture = embedder(conjecture)
+            step = embedder(step)
 
             # Zero the gradients
             optimizer.zero_grad()
@@ -123,8 +125,10 @@ def test(model, loss_fn, dset, embedder):
     for conjecture, step, labels in dset:
 
         with tr.no_grad():
-            conjecture = encode(conjecture, 256, embedder)
-            step = encode(step, 256, embedder)
+            # conjecture = encode(conjecture, 256, embedder)
+            # step = encode(step, 256, embedder)
+            conjecture = embedder(conjecture)
+            step = embedder(step)
 
             outputs = model(conjecture, step)
 
@@ -154,11 +158,11 @@ if __name__ == '__main__':
     
     for i in range(3):
 
-        model = mdl.SiameseTransformer(256, nhead=8)
+        model = mdl.SiameseTransformer(256, nhead=16, num_encoder_layers=16)
         # model = mdl.SiameseCNNLSTM(256, 256)
 
         model.to(device)
-        acc, loss, grad = train(model, data_size=100, epochs=2, lr=0.01)
+        acc, loss, grad = train(model, data_size=500, epochs=100, lr=0.01)
 
         net_acc.append(acc)
         net_loss.append(loss)

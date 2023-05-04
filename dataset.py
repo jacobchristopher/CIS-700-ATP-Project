@@ -19,26 +19,41 @@ Embedder
 
 """
 
-def sanitize(token):
-    return token.replace(".", "_")
-
 class Embedder(tr.nn.Module):
-    def __init__(self, vocab, cutoff_freq, d_model):
+    def __init__(self, vocab, d_model, device):
         super(Embedder, self).__init__()
 
-        self.embeddings = tr.nn.ParameterDict()
-        for token, frequency in vocab.items():
-            if frequency >= cutoff_freq:
-                self.embeddings[sanitize(token)] = tr.nn.Parameter(tr.randn(d_model) / d_model**.5)
+        # lookup table mapping tokens to indices
+        self.vocab = tuple(sorted(vocab.keys()))
+        self.lookup = {tok: t for t, tok in enumerate(self.vocab)}
 
-        self.unknown_embedding = tr.nn.Parameter(tr.randn(d_model) / d_model**.5)
+        # torch embedding module
+        self.embedding = tr.nn.Embedding(len(vocab), d_model, device=device)
 
+        # remember device for transfering input
+        self.device = device
+
+    def get_index(self, tokens):
+        if type(tokens[0]) == list: # batch mode
+            # tokens[n][t]: token at position t in example n of batch
+            index = [[self.lookup[tok] for tok in toks] for toks in tokens]
+        else:
+            # tokens[t]: token at position t of tokens
+            index = [self.lookup[tok] for tok in tokens]
+        return tr.tensor(index, device=self.device)
+
+    def get_tokens(self, index):
+        if len(index.shape) > 1: # batch mode
+            return [[self.vocab[i] for i in idx] for idx in index]
+        else:
+            return [self.vocab[i] for i in index]
 
     def forward(self, tokens):
-        seq = []
-        for token in tokens:
-            seq.append( self.embeddings.get(sanitize(token), self.unknown_embedding) )
-        return tr.stack(seq).unsqueeze(1) # insert singleton dimension for batch
+        # lookup the token indices
+        idx = self.get_index(tokens)
+        # retrieve the embeddings
+        return self.embedding(idx)
+
 
 
 """
@@ -154,7 +169,11 @@ def dataset_builder(size):
 
         if s == size: break
 
-    embedder = Embedder(vocab, size, max_len)
+    device = tr.device("cuda:0" if tr.cuda.is_available() else "cpu")
+    
+    vocab[" "] = vocab.get(" ", 0) + 1
+    
+    embedder = Embedder(vocab, 256, device = device)
 
     dset = []
     for update, (con, dep, examples, labels) in enumerate(get_samples()):
@@ -165,6 +184,17 @@ def dataset_builder(size):
 
             if labels[idx] == '-': label = tr.tensor([0., 1.])
             else: label = tr.tensor([1., 0.])
+
+            if len(con) > max_len:
+              con = con[:max_len]
+            else:
+              con += [" "] * (max_len - (len(con)))
+
+            if len(examples[idx]) > max_len:
+              examples[idx] = examples[idx][:max_len]
+            else:
+              examples[idx] += [" "] * (max_len - (len(examples[idx])))
+
 
             seq = (con, examples[idx], label)
             dset.append(seq)

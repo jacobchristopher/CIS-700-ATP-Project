@@ -18,17 +18,13 @@ class Transformer(nn.Module):
         super(Transformer, self).__init__()
 
         self.positional_encoder = utils.trigonometric_positional_encoder(256, 256, 10000, "cuda")
-        
         layer = nn.TransformerEncoderLayer(d_model=256, nhead=nhead, dim_feedforward=256, batch_first=True)
         self.trf = nn.TransformerEncoder(layer, num_encoder_layers)
         self.attn_mask = torch.triu(torch.full((256, 256), float('-inf'), device="cuda"), diagonal=1)
-        self.readout = nn.Linear(256, 2)
 
     def forward(self, x):
         x = self.positional_encoder(x)
-        x = x.squeeze(1)
-        mask = self.attn_mask[:x.shape[1], :x.shape[1]]
-        output = self.trf(x, mask = mask)
+        output = self.trf(x)
         return output
 
 
@@ -42,8 +38,8 @@ class SiameseTransformer(nn.Module):
         
         # Fully connected layers
         self.activation = nn.Sigmoid()
-        self.fc = nn.Linear(in_dim, 2)
-        self.maxpool = nn.MaxPool1d(kernel_size=512)
+        self.fc = nn.Linear(in_dim*2, 2)
+        self.maxpool = nn.MaxPool1d(kernel_size=in_dim)
 
 
     def forward(self, conjecture, step):
@@ -56,7 +52,7 @@ class SiameseTransformer(nn.Module):
         # Feed into fully connected layer
         x = self.fc(x)
         x = self.activation(x)
-        x = self.maxpool(x.transpose(1, 2)).squeeze()
+        x = self.maxpool(x.transpose(0, 1)).squeeze()
         return x
     
 
@@ -73,14 +69,14 @@ class SiameseCNNLSTM(nn.Module):
 
         # Activation function
         self.maxpool1 = nn.MaxPool1d(kernel_size=3, stride=3)
-        self.maxpool2 = nn.MaxPool1d(kernel_size=512)
+        self.maxpool2 = nn.MaxPool1d(kernel_size=256, stride=256)
 
         #LSTM
         self.lstm = nn.LSTM(in_dim, hidden_dim, in_dim)
 
         # Fully connected layers
         self.activation = nn.Sigmoid()
-        self.fc = nn.Linear(25, 2)
+        self.fc = nn.Linear(50, 2)
 
 
     def forward(self, conjecture, step):
@@ -100,6 +96,8 @@ class SiameseCNNLSTM(nn.Module):
 
         # Feed into fully connected layer
         x = self.fc(x)
-        x = self.activation(x)
-        x = self.maxpool2(x.transpose(1, 2)).squeeze()
+        x = self.activation(x).permute(1, 0)
+        x = self.maxpool2(x.unsqueeze(0)).squeeze(0).squeeze(0).squeeze(1)
         return x
+    
+
