@@ -23,7 +23,7 @@ class Transformer(nn.Module):
         self.attn_mask = torch.triu(torch.full((256, 256), float('-inf'), device="cuda"), diagonal=1)
 
     def forward(self, x):
-        x = self.positional_encoder(x)
+        # x = self.positional_encoder(x)
         output = self.trf(x)
         return output
 
