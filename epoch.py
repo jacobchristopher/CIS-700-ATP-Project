@@ -16,7 +16,7 @@ from dataset import encode
 
 device = tr.device("cuda")
 
-def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=None):
+def train(model, epochs=60, data_size=2500, lr=0.01, loss_fn=None, optimizer=None):
 
     # Set default loss and optimizer
     if loss_fn == None: loss_fn = tr.nn.CrossEntropyLoss()
@@ -43,6 +43,7 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
 
         run_loss = 0.0
         iter_acc = []
+        iter_grad = []
         
         idx = 0
         # Iterate over batches of data
@@ -72,7 +73,7 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
             optimizer.step()
 
             grads = tr.cat([p.grad.view(-1) for p in model.parameters() if p.grad is not None])
-            grad_norm.append(grads.norm(p=1).cpu())
+            iter_grad.append(grads.norm(p=1).cpu())
             
             # Update run loss
             run_loss += loss.item() * step.size(0)
@@ -95,6 +96,8 @@ def train(model, epochs=50, data_size=1000, lr=0.01, loss_fn=None, optimizer=Non
 
         train_acc_cumulative.append(train_acc.cpu())
         val_acc_cumulative.append(val_acc.cpu())
+
+        grad_norm.append(sum(iter_grad)/len(iter_grad))
 
         # Print epoch statistics
         print('Epoch [{}/{}], Training Loss: {:.4f}, Training Acc: {:.4f}, Validation Loss: {:.4f}, Validation Acc: {:.4f}'.format(epoch+1, epochs, epoch_loss, train_acc, val_loss, val_acc))
@@ -158,11 +161,11 @@ if __name__ == '__main__':
     
     for i in range(3):
 
-        model = mdl.SiameseTransformer(256, nhead=16, num_encoder_layers=16)
+        model = mdl.SiameseTransformer(256)
         # model = mdl.SiameseCNNLSTM(256, 256)
 
         model.to(device)
-        acc, loss, grad = train(model, data_size=500, epochs=100, lr=0.01)
+        acc, loss, grad = train(model)
 
         net_acc.append(acc)
         net_loss.append(loss)
