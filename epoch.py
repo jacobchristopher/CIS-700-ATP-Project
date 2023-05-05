@@ -158,7 +158,7 @@ if __name__ == '__main__':
     
     for i in range(3):
 
-        model = mdl.SiameseTransformer(256, nhead=16, num_encoder_layers=16)
+        model = mdl.SiameseTransformer(256, nhead=16, num_encoder_layers=8)
         # model = mdl.SiameseCNNLSTM(256, 256)
 
         model.to(device)
