@@ -162,7 +162,7 @@ if __name__ == '__main__':
         # model = mdl.SiameseCNNLSTM(256, 256)
 
         model.to(device)
-        acc, loss, grad = train(model, data_size=10000, epochs=100, lr=0.01)
+        acc, loss, grad = train(model, data_size=10000, epochs=60, lr=0.01)
 
         net_acc.append(acc)
         net_loss.append(loss)
