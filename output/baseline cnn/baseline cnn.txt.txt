@@ -1,0 +1,202 @@
+GPU ready =  True
+Generating dataset...
+Begining training loop...
+==============================================================
+  FLOPs Per Batch: 252306944, Model Parameters: 1836134
+==============================================================
+Epoch [1/60], Training Loss: 176.3975, Training Acc: 0.5349, Validation Loss: 175.1103, Validation Acc: 0.5800
+Epoch [2/60], Training Loss: 174.6311, Training Acc: 0.5663, Validation Loss: 174.1677, Validation Acc: 0.6080
+Epoch [3/60], Training Loss: 173.2821, Training Acc: 0.5926, Validation Loss: 173.3424, Validation Acc: 0.6120
+Epoch [4/60], Training Loss: 172.1027, Training Acc: 0.6074, Validation Loss: 172.4606, Validation Acc: 0.6200
+Epoch [5/60], Training Loss: 170.9683, Training Acc: 0.6280, Validation Loss: 171.7771, Validation Acc: 0.6360
+Epoch [6/60], Training Loss: 169.8589, Training Acc: 0.6383, Validation Loss: 171.0736, Validation Acc: 0.6360
+Epoch [7/60], Training Loss: 168.7844, Training Acc: 0.6503, Validation Loss: 170.4542, Validation Acc: 0.6560
+Epoch [8/60], Training Loss: 167.6551, Training Acc: 0.6640, Validation Loss: 169.7968, Validation Acc: 0.6560
+Epoch [9/60], Training Loss: 166.4900, Training Acc: 0.6697, Validation Loss: 169.0680, Validation Acc: 0.6560
+Epoch [10/60], Training Loss: 165.2778, Training Acc: 0.6817, Validation Loss: 168.3253, Validation Acc: 0.6720
+Epoch [11/60], Training Loss: 164.0517, Training Acc: 0.6966, Validation Loss: 167.4729, Validation Acc: 0.6720
+Epoch [12/60], Training Loss: 162.7374, Training Acc: 0.7103, Validation Loss: 166.7614, Validation Acc: 0.6640
+Epoch [13/60], Training Loss: 161.3866, Training Acc: 0.7263, Validation Loss: 166.1205, Validation Acc: 0.6680
+Epoch [14/60], Training Loss: 159.9605, Training Acc: 0.7400, Validation Loss: 165.3318, Validation Acc: 0.6800
+Epoch [15/60], Training Loss: 158.4016, Training Acc: 0.7503, Validation Loss: 164.5201, Validation Acc: 0.6960
+Epoch [16/60], Training Loss: 156.7017, Training Acc: 0.7663, Validation Loss: 163.8936, Validation Acc: 0.6960
+Epoch [17/60], Training Loss: 154.8415, Training Acc: 0.7783, Validation Loss: 163.0217, Validation Acc: 0.7000
+Epoch [18/60], Training Loss: 152.7290, Training Acc: 0.7840, Validation Loss: 161.8382, Validation Acc: 0.6920
+Epoch [19/60], Training Loss: 150.3081, Training Acc: 0.7909, Validation Loss: 160.6871, Validation Acc: 0.6960
+Epoch [20/60], Training Loss: 147.6625, Training Acc: 0.8000, Validation Loss: 159.6427, Validation Acc: 0.7160
+Epoch [21/60], Training Loss: 144.6924, Training Acc: 0.8046, Validation Loss: 158.5772, Validation Acc: 0.7040
+Epoch [22/60], Training Loss: 141.8737, Training Acc: 0.8086, Validation Loss: 157.9248, Validation Acc: 0.7080
+Epoch [23/60], Training Loss: 139.1043, Training Acc: 0.8103, Validation Loss: 157.1272, Validation Acc: 0.7080
+Epoch [24/60], Training Loss: 136.4539, Training Acc: 0.8189, Validation Loss: 155.8811, Validation Acc: 0.7200
+Epoch [25/60], Training Loss: 134.0556, Training Acc: 0.8240, Validation Loss: 155.3272, Validation Acc: 0.7120
+Epoch [26/60], Training Loss: 131.7310, Training Acc: 0.8303, Validation Loss: 154.6052, Validation Acc: 0.7160
+Epoch [27/60], Training Loss: 129.7276, Training Acc: 0.8371, Validation Loss: 154.3248, Validation Acc: 0.7040
+Epoch [28/60], Training Loss: 127.8330, Training Acc: 0.8440, Validation Loss: 153.4983, Validation Acc: 0.7120
+Epoch [29/60], Training Loss: 125.9411, Training Acc: 0.8520, Validation Loss: 152.7700, Validation Acc: 0.7120
+Epoch [30/60], Training Loss: 124.3087, Training Acc: 0.8566, Validation Loss: 152.1007, Validation Acc: 0.7120
+Epoch [31/60], Training Loss: 122.6509, Training Acc: 0.8623, Validation Loss: 151.4302, Validation Acc: 0.7200
+Epoch [32/60], Training Loss: 121.1984, Training Acc: 0.8686, Validation Loss: 150.9362, Validation Acc: 0.7160
+Epoch [33/60], Training Loss: 119.9307, Training Acc: 0.8697, Validation Loss: 150.3375, Validation Acc: 0.7240
+Epoch [34/60], Training Loss: 118.8841, Training Acc: 0.8737, Validation Loss: 149.7575, Validation Acc: 0.7360
+Epoch [35/60], Training Loss: 117.5405, Training Acc: 0.8743, Validation Loss: 149.3364, Validation Acc: 0.7200
+Epoch [36/60], Training Loss: 116.7201, Training Acc: 0.8777, Validation Loss: 147.6561, Validation Acc: 0.7400
+Epoch [37/60], Training Loss: 115.6364, Training Acc: 0.8823, Validation Loss: 148.2043, Validation Acc: 0.7280
+Epoch [38/60], Training Loss: 114.7871, Training Acc: 0.8794, Validation Loss: 147.0174, Validation Acc: 0.7400
+Epoch [39/60], Training Loss: 113.9639, Training Acc: 0.8846, Validation Loss: 146.8281, Validation Acc: 0.7400
+Epoch [40/60], Training Loss: 113.1332, Training Acc: 0.8851, Validation Loss: 146.3153, Validation Acc: 0.7440
+Epoch [41/60], Training Loss: 112.4760, Training Acc: 0.8886, Validation Loss: 146.2963, Validation Acc: 0.7440
+Epoch [42/60], Training Loss: 111.8665, Training Acc: 0.8886, Validation Loss: 145.8544, Validation Acc: 0.7440
+Epoch [43/60], Training Loss: 111.1681, Training Acc: 0.8914, Validation Loss: 145.9073, Validation Acc: 0.7400
+Epoch [44/60], Training Loss: 110.6663, Training Acc: 0.8903, Validation Loss: 146.6776, Validation Acc: 0.7400
+Epoch [45/60], Training Loss: 110.0900, Training Acc: 0.8897, Validation Loss: 146.3638, Validation Acc: 0.7360
+Epoch [46/60], Training Loss: 109.5931, Training Acc: 0.8931, Validation Loss: 146.3698, Validation Acc: 0.7400
+Epoch [47/60], Training Loss: 109.1487, Training Acc: 0.8931, Validation Loss: 146.1705, Validation Acc: 0.7400
+Epoch [48/60], Training Loss: 108.8072, Training Acc: 0.8960, Validation Loss: 146.1239, Validation Acc: 0.7400
+Epoch [49/60], Training Loss: 108.2673, Training Acc: 0.8977, Validation Loss: 145.3377, Validation Acc: 0.7560
+Epoch [50/60], Training Loss: 107.9352, Training Acc: 0.9029, Validation Loss: 146.0636, Validation Acc: 0.7480
+Epoch [51/60], Training Loss: 107.6306, Training Acc: 0.9000, Validation Loss: 146.0456, Validation Acc: 0.7560
+Epoch [52/60], Training Loss: 107.2915, Training Acc: 0.9011, Validation Loss: 145.8795, Validation Acc: 0.7560
+Epoch [53/60], Training Loss: 106.9472, Training Acc: 0.9006, Validation Loss: 145.4137, Validation Acc: 0.7560
+Epoch [54/60], Training Loss: 106.7045, Training Acc: 0.9011, Validation Loss: 144.1991, Validation Acc: 0.7560
+Epoch [55/60], Training Loss: 106.2032, Training Acc: 0.9040, Validation Loss: 145.1226, Validation Acc: 0.7640
+Epoch [56/60], Training Loss: 105.9779, Training Acc: 0.9029, Validation Loss: 144.9278, Validation Acc: 0.7640
+Epoch [57/60], Training Loss: 105.6854, Training Acc: 0.9017, Validation Loss: 144.7038, Validation Acc: 0.7640
+Epoch [58/60], Training Loss: 105.6200, Training Acc: 0.8994, Validation Loss: 144.1285, Validation Acc: 0.7560
+Epoch [59/60], Training Loss: 105.3034, Training Acc: 0.9006, Validation Loss: 144.2991, Validation Acc: 0.7560
+Epoch [60/60], Training Loss: 105.2516, Training Acc: 0.9023, Validation Loss: 143.4470, Validation Acc: 0.7720
+Testing Loss: 149.8667, Testing Acc: 0.7080
+CPU Time:  344.0069546699524
+Generating dataset...
+Begining training loop...
+==============================================================
+  FLOPs Per Batch: 252306944, Model Parameters: 1836134
+==============================================================
+Epoch [1/60], Training Loss: 176.4974, Training Acc: 0.5480, Validation Loss: 176.6389, Validation Acc: 0.5000
+Epoch [2/60], Training Loss: 174.3206, Training Acc: 0.5977, Validation Loss: 175.5901, Validation Acc: 0.5480
+Epoch [3/60], Training Loss: 172.6858, Training Acc: 0.6274, Validation Loss: 174.9632, Validation Acc: 0.5600
+Epoch [4/60], Training Loss: 171.1749, Training Acc: 0.6389, Validation Loss: 174.2179, Validation Acc: 0.5800
+Epoch [5/60], Training Loss: 169.8441, Training Acc: 0.6549, Validation Loss: 173.5361, Validation Acc: 0.6000
+Epoch [6/60], Training Loss: 168.6318, Training Acc: 0.6640, Validation Loss: 172.8700, Validation Acc: 0.6280
+Epoch [7/60], Training Loss: 167.4369, Training Acc: 0.6731, Validation Loss: 172.2314, Validation Acc: 0.6200
+Epoch [8/60], Training Loss: 166.2794, Training Acc: 0.6811, Validation Loss: 171.5114, Validation Acc: 0.6200
+Epoch [9/60], Training Loss: 165.1215, Training Acc: 0.6897, Validation Loss: 170.8098, Validation Acc: 0.6200
+Epoch [10/60], Training Loss: 163.9476, Training Acc: 0.7000, Validation Loss: 170.0887, Validation Acc: 0.6280
+Epoch [11/60], Training Loss: 162.7867, Training Acc: 0.7080, Validation Loss: 169.4324, Validation Acc: 0.6240
+Epoch [12/60], Training Loss: 161.5705, Training Acc: 0.7120, Validation Loss: 168.7438, Validation Acc: 0.6360
+Epoch [13/60], Training Loss: 160.3075, Training Acc: 0.7246, Validation Loss: 168.0510, Validation Acc: 0.6360
+Epoch [14/60], Training Loss: 158.9060, Training Acc: 0.7337, Validation Loss: 167.4247, Validation Acc: 0.6440
+Epoch [15/60], Training Loss: 157.4331, Training Acc: 0.7406, Validation Loss: 166.7849, Validation Acc: 0.6520
+Epoch [16/60], Training Loss: 155.8831, Training Acc: 0.7486, Validation Loss: 166.0983, Validation Acc: 0.6440
+Epoch [17/60], Training Loss: 154.0147, Training Acc: 0.7600, Validation Loss: 165.2740, Validation Acc: 0.6480
+Epoch [18/60], Training Loss: 151.9746, Training Acc: 0.7674, Validation Loss: 164.2652, Validation Acc: 0.6480
+Epoch [19/60], Training Loss: 149.5367, Training Acc: 0.7731, Validation Loss: 163.0355, Validation Acc: 0.6600
+Epoch [20/60], Training Loss: 146.8562, Training Acc: 0.7811, Validation Loss: 162.0088, Validation Acc: 0.6600
+Epoch [21/60], Training Loss: 144.0850, Training Acc: 0.7891, Validation Loss: 160.5990, Validation Acc: 0.6480
+Epoch [22/60], Training Loss: 141.4197, Training Acc: 0.8029, Validation Loss: 159.8182, Validation Acc: 0.6520
+Epoch [23/60], Training Loss: 138.9421, Training Acc: 0.8080, Validation Loss: 159.1321, Validation Acc: 0.6520
+Epoch [24/60], Training Loss: 136.5253, Training Acc: 0.8189, Validation Loss: 158.3247, Validation Acc: 0.6680
+Epoch [25/60], Training Loss: 134.2393, Training Acc: 0.8234, Validation Loss: 158.2181, Validation Acc: 0.6720
+Epoch [26/60], Training Loss: 132.0692, Training Acc: 0.8303, Validation Loss: 157.7565, Validation Acc: 0.6560
+Epoch [27/60], Training Loss: 130.2203, Training Acc: 0.8400, Validation Loss: 157.5223, Validation Acc: 0.6600
+Epoch [28/60], Training Loss: 128.4506, Training Acc: 0.8400, Validation Loss: 156.9461, Validation Acc: 0.6640
+Epoch [29/60], Training Loss: 126.6071, Training Acc: 0.8434, Validation Loss: 157.3847, Validation Acc: 0.6640
+Epoch [30/60], Training Loss: 125.0833, Training Acc: 0.8491, Validation Loss: 156.9860, Validation Acc: 0.6680
+Epoch [31/60], Training Loss: 123.4802, Training Acc: 0.8543, Validation Loss: 156.7991, Validation Acc: 0.6720
+Epoch [32/60], Training Loss: 122.2814, Training Acc: 0.8566, Validation Loss: 156.8311, Validation Acc: 0.6720
+Epoch [33/60], Training Loss: 121.0313, Training Acc: 0.8617, Validation Loss: 156.5955, Validation Acc: 0.6640
+Epoch [34/60], Training Loss: 119.9966, Training Acc: 0.8634, Validation Loss: 156.4775, Validation Acc: 0.6520
+Epoch [35/60], Training Loss: 118.9132, Training Acc: 0.8669, Validation Loss: 156.4896, Validation Acc: 0.6600
+Epoch [36/60], Training Loss: 117.8754, Training Acc: 0.8709, Validation Loss: 156.1420, Validation Acc: 0.6440
+Epoch [37/60], Training Loss: 117.2208, Training Acc: 0.8703, Validation Loss: 156.3830, Validation Acc: 0.6400
+Epoch [38/60], Training Loss: 116.4324, Training Acc: 0.8754, Validation Loss: 156.3221, Validation Acc: 0.6440
+Epoch [39/60], Training Loss: 115.5338, Training Acc: 0.8771, Validation Loss: 156.1374, Validation Acc: 0.6480
+Epoch [40/60], Training Loss: 115.0401, Training Acc: 0.8754, Validation Loss: 156.1394, Validation Acc: 0.6360
+Epoch [41/60], Training Loss: 114.5243, Training Acc: 0.8789, Validation Loss: 156.1168, Validation Acc: 0.6480
+Epoch [42/60], Training Loss: 113.9432, Training Acc: 0.8789, Validation Loss: 156.1383, Validation Acc: 0.6480
+Epoch [43/60], Training Loss: 113.2353, Training Acc: 0.8840, Validation Loss: 156.0186, Validation Acc: 0.6440
+Epoch [44/60], Training Loss: 112.5558, Training Acc: 0.8846, Validation Loss: 155.9052, Validation Acc: 0.6480
+Epoch [45/60], Training Loss: 112.0704, Training Acc: 0.8851, Validation Loss: 155.8374, Validation Acc: 0.6520
+Epoch [46/60], Training Loss: 111.6293, Training Acc: 0.8869, Validation Loss: 155.5723, Validation Acc: 0.6520
+Epoch [47/60], Training Loss: 111.2567, Training Acc: 0.8869, Validation Loss: 155.6340, Validation Acc: 0.6480
+Epoch [48/60], Training Loss: 110.8180, Training Acc: 0.8874, Validation Loss: 155.4203, Validation Acc: 0.6520
+Epoch [49/60], Training Loss: 110.4234, Training Acc: 0.8886, Validation Loss: 155.6647, Validation Acc: 0.6560
+Epoch [50/60], Training Loss: 110.0735, Training Acc: 0.8909, Validation Loss: 155.4463, Validation Acc: 0.6520
+Epoch [51/60], Training Loss: 109.7888, Training Acc: 0.8920, Validation Loss: 155.3658, Validation Acc: 0.6520
+Epoch [52/60], Training Loss: 109.4471, Training Acc: 0.8909, Validation Loss: 155.0785, Validation Acc: 0.6520
+Epoch [53/60], Training Loss: 109.1192, Training Acc: 0.8914, Validation Loss: 155.0712, Validation Acc: 0.6560
+Epoch [54/60], Training Loss: 108.8163, Training Acc: 0.8926, Validation Loss: 154.9746, Validation Acc: 0.6560
+Epoch [55/60], Training Loss: 108.4759, Training Acc: 0.8937, Validation Loss: 154.7326, Validation Acc: 0.6560
+Epoch [56/60], Training Loss: 108.2654, Training Acc: 0.8949, Validation Loss: 154.6647, Validation Acc: 0.6560
+Epoch [57/60], Training Loss: 107.8879, Training Acc: 0.8949, Validation Loss: 154.6937, Validation Acc: 0.6560
+Epoch [58/60], Training Loss: 107.7519, Training Acc: 0.8954, Validation Loss: 154.4895, Validation Acc: 0.6560
+Epoch [59/60], Training Loss: 107.4853, Training Acc: 0.8971, Validation Loss: 154.3542, Validation Acc: 0.6560
+Epoch [60/60], Training Loss: 107.2388, Training Acc: 0.8977, Validation Loss: 154.2796, Validation Acc: 0.6560
+Testing Loss: 156.8380, Testing Acc: 0.6680
+CPU Time:  339.55377221107483
+Generating dataset...
+Begining training loop...
+==============================================================
+  FLOPs Per Batch: 252306944, Model Parameters: 1836134
+==============================================================
+Epoch [1/60], Training Loss: 176.2467, Training Acc: 0.5486, Validation Loss: 176.7352, Validation Acc: 0.5240
+Epoch [2/60], Training Loss: 174.1482, Training Acc: 0.5800, Validation Loss: 175.8046, Validation Acc: 0.5560
+Epoch [3/60], Training Loss: 172.4159, Training Acc: 0.6131, Validation Loss: 175.3465, Validation Acc: 0.5640
+Epoch [4/60], Training Loss: 170.9816, Training Acc: 0.6337, Validation Loss: 174.8662, Validation Acc: 0.5640
+Epoch [5/60], Training Loss: 169.6698, Training Acc: 0.6440, Validation Loss: 174.4747, Validation Acc: 0.5720
+Epoch [6/60], Training Loss: 168.3878, Training Acc: 0.6514, Validation Loss: 174.1565, Validation Acc: 0.5720
+Epoch [7/60], Training Loss: 167.0688, Training Acc: 0.6720, Validation Loss: 173.7815, Validation Acc: 0.5880
+Epoch [8/60], Training Loss: 165.6899, Training Acc: 0.6863, Validation Loss: 173.4535, Validation Acc: 0.5840
+Epoch [9/60], Training Loss: 164.3147, Training Acc: 0.6966, Validation Loss: 173.0345, Validation Acc: 0.5920
+Epoch [10/60], Training Loss: 162.8332, Training Acc: 0.7069, Validation Loss: 172.4561, Validation Acc: 0.5960
+Epoch [11/60], Training Loss: 161.2273, Training Acc: 0.7189, Validation Loss: 172.2420, Validation Acc: 0.6040
+Epoch [12/60], Training Loss: 159.4292, Training Acc: 0.7343, Validation Loss: 171.7733, Validation Acc: 0.6080
+Epoch [13/60], Training Loss: 157.4703, Training Acc: 0.7531, Validation Loss: 171.4352, Validation Acc: 0.6080
+Epoch [14/60], Training Loss: 155.2402, Training Acc: 0.7600, Validation Loss: 171.1395, Validation Acc: 0.6200
+Epoch [15/60], Training Loss: 152.8637, Training Acc: 0.7726, Validation Loss: 170.5352, Validation Acc: 0.6240
+Epoch [16/60], Training Loss: 150.2376, Training Acc: 0.7829, Validation Loss: 170.1339, Validation Acc: 0.6160
+Epoch [17/60], Training Loss: 147.4314, Training Acc: 0.7891, Validation Loss: 169.1626, Validation Acc: 0.6240
+Epoch [18/60], Training Loss: 144.6293, Training Acc: 0.7937, Validation Loss: 168.9438, Validation Acc: 0.6120
+Epoch [19/60], Training Loss: 142.0239, Training Acc: 0.7989, Validation Loss: 168.7648, Validation Acc: 0.6200
+Epoch [20/60], Training Loss: 139.3441, Training Acc: 0.8063, Validation Loss: 167.7458, Validation Acc: 0.6320
+Epoch [21/60], Training Loss: 136.9827, Training Acc: 0.8149, Validation Loss: 168.1192, Validation Acc: 0.6200
+Epoch [22/60], Training Loss: 134.6852, Training Acc: 0.8234, Validation Loss: 167.6929, Validation Acc: 0.6200
+Epoch [23/60], Training Loss: 132.4652, Training Acc: 0.8280, Validation Loss: 167.6439, Validation Acc: 0.6240
+Epoch [24/60], Training Loss: 130.4565, Training Acc: 0.8326, Validation Loss: 167.3977, Validation Acc: 0.6280
+Epoch [25/60], Training Loss: 128.6653, Training Acc: 0.8417, Validation Loss: 167.4390, Validation Acc: 0.6280
+Epoch [26/60], Training Loss: 126.9099, Training Acc: 0.8451, Validation Loss: 167.1491, Validation Acc: 0.6320
+Epoch [27/60], Training Loss: 125.2182, Training Acc: 0.8509, Validation Loss: 167.1385, Validation Acc: 0.6280
+Epoch [28/60], Training Loss: 123.7526, Training Acc: 0.8571, Validation Loss: 166.7122, Validation Acc: 0.6280
+Epoch [29/60], Training Loss: 122.3349, Training Acc: 0.8594, Validation Loss: 166.5712, Validation Acc: 0.6240
+Epoch [30/60], Training Loss: 121.2933, Training Acc: 0.8629, Validation Loss: 166.0137, Validation Acc: 0.6240
+Epoch [31/60], Training Loss: 119.8010, Training Acc: 0.8663, Validation Loss: 165.8744, Validation Acc: 0.6240
+Epoch [32/60], Training Loss: 118.6831, Training Acc: 0.8703, Validation Loss: 165.7569, Validation Acc: 0.6240
+Epoch [33/60], Training Loss: 117.8620, Training Acc: 0.8737, Validation Loss: 165.3476, Validation Acc: 0.6280
+Epoch [34/60], Training Loss: 116.8813, Training Acc: 0.8749, Validation Loss: 165.6738, Validation Acc: 0.6240
+Epoch [35/60], Training Loss: 116.0938, Training Acc: 0.8789, Validation Loss: 165.0233, Validation Acc: 0.6280
+Epoch [36/60], Training Loss: 115.2913, Training Acc: 0.8783, Validation Loss: 165.0396, Validation Acc: 0.6320
+Epoch [37/60], Training Loss: 114.4516, Training Acc: 0.8789, Validation Loss: 164.5189, Validation Acc: 0.6320
+Epoch [38/60], Training Loss: 113.6799, Training Acc: 0.8800, Validation Loss: 164.2819, Validation Acc: 0.6440
+Epoch [39/60], Training Loss: 113.1552, Training Acc: 0.8811, Validation Loss: 164.0821, Validation Acc: 0.6360
+Epoch [40/60], Training Loss: 112.4507, Training Acc: 0.8851, Validation Loss: 164.4140, Validation Acc: 0.6440
+Epoch [41/60], Training Loss: 111.8722, Training Acc: 0.8869, Validation Loss: 163.7440, Validation Acc: 0.6280
+Epoch [42/60], Training Loss: 111.3392, Training Acc: 0.8857, Validation Loss: 163.9857, Validation Acc: 0.6440
+Epoch [43/60], Training Loss: 110.7985, Training Acc: 0.8869, Validation Loss: 163.3940, Validation Acc: 0.6360
+Epoch [44/60], Training Loss: 110.3793, Training Acc: 0.8886, Validation Loss: 163.8042, Validation Acc: 0.6400
+Epoch [45/60], Training Loss: 109.9419, Training Acc: 0.8897, Validation Loss: 163.4760, Validation Acc: 0.6400
+Epoch [46/60], Training Loss: 109.5536, Training Acc: 0.8903, Validation Loss: 163.3689, Validation Acc: 0.6400
+Epoch [47/60], Training Loss: 109.1500, Training Acc: 0.8897, Validation Loss: 163.3180, Validation Acc: 0.6360
+Epoch [48/60], Training Loss: 108.7654, Training Acc: 0.8903, Validation Loss: 163.0950, Validation Acc: 0.6400
+Epoch [49/60], Training Loss: 108.3789, Training Acc: 0.8920, Validation Loss: 163.1156, Validation Acc: 0.6400
+Epoch [50/60], Training Loss: 108.0192, Training Acc: 0.8926, Validation Loss: 162.8291, Validation Acc: 0.6360
+Epoch [51/60], Training Loss: 107.7016, Training Acc: 0.8931, Validation Loss: 162.7700, Validation Acc: 0.6440
+Epoch [52/60], Training Loss: 107.4494, Training Acc: 0.8931, Validation Loss: 161.6865, Validation Acc: 0.6400
+Epoch [53/60], Training Loss: 107.1654, Training Acc: 0.8931, Validation Loss: 161.3800, Validation Acc: 0.6400
+Epoch [54/60], Training Loss: 106.9210, Training Acc: 0.8943, Validation Loss: 162.1749, Validation Acc: 0.6480
+Epoch [55/60], Training Loss: 106.6846, Training Acc: 0.8954, Validation Loss: 161.0675, Validation Acc: 0.6400
+Epoch [56/60], Training Loss: 106.5337, Training Acc: 0.8971, Validation Loss: 161.0998, Validation Acc: 0.6400
+Epoch [57/60], Training Loss: 106.3055, Training Acc: 0.8954, Validation Loss: 161.5395, Validation Acc: 0.6440
+Epoch [58/60], Training Loss: 106.1351, Training Acc: 0.8966, Validation Loss: 160.7837, Validation Acc: 0.6360
+Epoch [59/60], Training Loss: 105.9494, Training Acc: 0.8966, Validation Loss: 161.4499, Validation Acc: 0.6520
+Epoch [60/60], Training Loss: 105.7428, Training Acc: 0.8989, Validation Loss: 160.6747, Validation Acc: 0.6480
+Testing Loss: 148.4236, Testing Acc: 0.7160
+CPU Time:  339.2279944419861
