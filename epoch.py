@@ -186,11 +186,11 @@ if __name__ == '__main__':
     
     for i in range(3):
 
-        model = mdl.SiameseTransformer(256, nhead=32)
-        # model = mdl.SiameseCNNLSTM(256, 256)
+        # model = mdl.SiameseTransformer(256, nhead=32)
+        model = mdl.SiameseCNNLSTM(256, 256)
 
         model.to(device)
-        acc, loss, grad = train(model, lr=0.001, epochs=4, data_size=10, write_log=True, log_filename=log_filename)
+        acc, loss, grad = train(model, lr=0.001, write_log=True, log_filename=log_filename)
 
         net_acc.append(acc)
         net_loss.append(loss)

@@ -72,7 +72,7 @@ class SiameseCNNLSTM(nn.Module):
         self.maxpool2 = nn.MaxPool1d(kernel_size=256, stride=256)
 
         #LSTM
-        self.lstm = nn.LSTM(in_dim, hidden_dim, in_dim)
+        self.lstm = nn.LSTM(25, 25)
 
         # Fully connected layers
         self.activation = nn.Sigmoid()
@@ -85,12 +85,14 @@ class SiameseCNNLSTM(nn.Module):
         conjecture = self.maxpool1(conjecture)
         conjecture = self.conv1b(conjecture)
         conjecture = self.maxpool1(conjecture)
+        conjecture, _ = self.lstm(conjecture)
 
         # Step forward pass
         step = self.conv1c(step)
         step = self.maxpool1(step)
         step = self.conv1d(step)
         step = self.maxpool1(step)
+        step, _ = self.lstm(step)
 
         x = torch.cat([conjecture, step], dim=1)
 
