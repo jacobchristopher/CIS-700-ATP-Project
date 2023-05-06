@@ -13,10 +13,13 @@ import model as mdl
 import torchmetrics
 from thop import profile
 from dataset import encode
+import random
+import os
+import sys
 
 device = tr.device("cuda")
 
-def train(model, epochs=60, data_size=2500, lr=0.01, loss_fn=None, optimizer=None):
+def train(model, epochs=60, data_size=2500, lr=0.01, loss_fn=None, optimizer=None, write_log=False, log_filename="log.txt"):
 
     # Set default loss and optimizer
     if loss_fn == None: loss_fn = tr.nn.CrossEntropyLoss()
@@ -102,6 +105,11 @@ def train(model, epochs=60, data_size=2500, lr=0.01, loss_fn=None, optimizer=Non
         # Print epoch statistics
         print('Epoch [{}/{}], Training Loss: {:.4f}, Training Acc: {:.4f}, Validation Loss: {:.4f}, Validation Acc: {:.4f}'.format(epoch+1, epochs, epoch_loss, train_acc, val_loss, val_acc))
 
+        with open(log_filename, "w") as f:
+            sys.stdout = f
+            print('Epoch [{}/{}], Training Loss: {:.4f}, Training Acc: {:.4f}, Validation Loss: {:.4f}, Validation Acc: {:.4f}'.format(epoch+1, epochs, epoch_loss, train_acc, val_loss, val_acc))
+            sys.stdout = sys.__stdout__
+
 
     # Test Accuracy
     test_loss, test_acc = test(model, loss_fn, test_set, embedder)
@@ -112,6 +120,11 @@ def train(model, epochs=60, data_size=2500, lr=0.01, loss_fn=None, optimizer=Non
     elapsed_time = end_time - start_time
     print('CPU Time: ', elapsed_time)
 
+    with open(log_filename, "w") as f:
+        sys.stdout = f
+        print('Testing Loss: {:.4f}, Testing Acc: {:.4f}'.format(test_loss, test_acc))
+        print('CPU Time: ', elapsed_time)
+        sys.stdout = sys.__stdout__
 
     return (train_acc_cumulative, val_acc_cumulative), (train_loss_cumulative, val_loss_cumulative), grad_norm
 
@@ -158,14 +171,26 @@ if __name__ == '__main__':
     net_acc = []
     net_loss = []
     net_grad = []
+
+    if not os.path.exists('output'):
+        os.makedirs('output')
+    plot_idx = 1
+    while os.path.exists(f'output/my_plot ({plot_idx})_1.png'):
+        plot_idx += 1
+    plot_filename = f'output/my_plot ({plot_idx})'
+
+    log_filename_idx = 1
+    while os.path.exists(f"output/logs_{log_filename_idx}.txt"):
+        log_filename_idx += 1
+    log_filename = f"output/logs_{log_filename_idx}.txt"
     
     for i in range(3):
 
-        model = mdl.SiameseTransformer(256)
+        model = mdl.SiameseTransformer(256, nhead=32)
         # model = mdl.SiameseCNNLSTM(256, 256)
 
         model.to(device)
-        acc, loss, grad = train(model)
+        acc, loss, grad = train(model, lr=0.001, epochs=4, data_size=10, write_log=True, log_filename=log_filename)
 
         net_acc.append(acc)
         net_loss.append(loss)
@@ -182,10 +207,10 @@ if __name__ == '__main__':
     ax.plot(net_acc[2][1], linestyle=':', color='red', label='Validation 3')
     ax.set_xlabel('Epochs')
     ax.set_ylabel('Accuracy')
-    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+    ax.set_title('Siamese Transformer 32 Attention Heads')        # <- TODO: Set title to model used
     ax.legend()
 
-    plt.show()
+    fig.savefig(f'{plot_filename}_1.png', dpi=300, bbox_inches='tight', pad_inches=0.1)
 
     # Graph the loss curves
     fig, ax = plt.subplots()
@@ -197,10 +222,10 @@ if __name__ == '__main__':
     ax.plot(net_loss[2][1], linestyle=':', color='red', label='Validation 3')
     ax.set_xlabel('Epochs')
     ax.set_ylabel('Loss')
-    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+    ax.set_title('Siamese Transformer 32 Attention Heads')        # <- TODO: Set title to model used
     ax.legend()
 
-    plt.show()
+    fig.savefig(f'{plot_filename}_2.png', dpi=300, bbox_inches='tight', pad_inches=0.1)
 
     # Graph grad l1 norm
     fig, ax = plt.subplots()
@@ -209,7 +234,8 @@ if __name__ == '__main__':
     ax.plot(net_grad[2], label='Iteration 3')
     ax.set_xlabel('Epochs')
     ax.set_ylabel('Gradient L1 Norm')
-    ax.set_title('Siamese Transformer')        # <- TODO: Set title to model used
+    ax.set_title('Siamese Transformer 32 Attention Heads')        # <- TODO: Set title to model used
     ax.legend()
 
-    plt.show()
+    # randomly generate a name to save the 3 plots
+    fig.savefig(f'{plot_filename}_3.png', dpi=300, bbox_inches='tight', pad_inches=0.1)
