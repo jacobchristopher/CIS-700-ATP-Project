@@ -105,7 +105,7 @@ def train(model, epochs=60, data_size=2500, lr=0.01, loss_fn=None, optimizer=Non
         # Print epoch statistics
         print('Epoch [{}/{}], Training Loss: {:.4f}, Training Acc: {:.4f}, Validation Loss: {:.4f}, Validation Acc: {:.4f}'.format(epoch+1, epochs, epoch_loss, train_acc, val_loss, val_acc))
 
-        with open(log_filename, "w") as f:
+        with open(log_filename, "a") as f:
             sys.stdout = f
             print('Epoch [{}/{}], Training Loss: {:.4f}, Training Acc: {:.4f}, Validation Loss: {:.4f}, Validation Acc: {:.4f}'.format(epoch+1, epochs, epoch_loss, train_acc, val_loss, val_acc))
             sys.stdout = sys.__stdout__
@@ -120,7 +120,7 @@ def train(model, epochs=60, data_size=2500, lr=0.01, loss_fn=None, optimizer=Non
     elapsed_time = end_time - start_time
     print('CPU Time: ', elapsed_time)
 
-    with open(log_filename, "w") as f:
+    with open(log_filename, "a") as f:
         sys.stdout = f
         print('Testing Loss: {:.4f}, Testing Acc: {:.4f}'.format(test_loss, test_acc))
         print('CPU Time: ', elapsed_time)
